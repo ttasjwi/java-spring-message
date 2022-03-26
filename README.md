@@ -66,3 +66,48 @@ public interface MessageSource {
     - Locale에 맞추어 구체적인 것이 있으면 먼저 찾고 없으면 디폴트까지 순서대로 찾아감
 
 ---
+
+## 타임리프 메시지 + 국제화 메시지 적용
+```properties
+hello=안녕
+hello.name=안녕 {0}
+
+label.item=상품
+label.item.id=상품 ID
+label.item.itemName=상품명
+label.item.price=가격
+label.item.quantity=수량
+
+page.items=상품 목록
+page.item=상품 상세
+page.addItem=상품 등록
+page.updateItem=상품 수정
+
+button.save=저장
+button.cancel=취소
+```
+```html
+  <div class="py-5 text-center">
+      <h2 th:text="#{page.addItem}">상품 등록</h2>
+  </div>
+```
+- 타임리프는 `#{...}`를 통해 메시지 소스에 등록된 코드, 메시지를 기반으로 편하게 메시지 처리를 할 수 있게 도와줌
+- 요청 Header의 `Accept-Language`에 지정된 언어 설정 값에 따라, 국제화가 적용됨
+  - Chrome 기준으로, 설정-고급-언어에서 설정을 변경하면 요청 시 `Accept-Language` 값이 변경된다.
+
+### 타임리프 메시지 - 파라미터 적용
+```properties
+hello.name=안녕 {0}
+```
+```html
+<p th:text="#{hello.name(${item.itemName})}"></p>
+```
+- 파라미터를 지정하여, 메시지 설정 가능
+
+### LocaleResolver - 로케일 선택방식 변경
+
+- 스프링은 Locale 선택방식을 변경할 수 있도록 `LocaleResolver` 인터페이스를 지원
+- 스프링부트는 기본적으로 `Accept-Language` 헤더를 활용하는 `AcceptHeaderLocaleResolver`를 사용
+- 필요에 따라, 쿠키 등을 기반으로 Locale 선택방식을 변경할 수 있도록 LocaleResolver 구현체를 만들어서 로케일 설정을 변경하는 방식을 사용할 수 있다.
+
+---
